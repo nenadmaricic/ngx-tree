@@ -32,3 +32,13 @@ ngx-tree-viewport {
 ::ng-deep .ngx-tree-dragging-target * {
     pointer-events: none;
 }
+
+.empty-tree-drop-slot {
+  height: 50px;
+  min-width: 100px;
+  &.is-dragging-over {
+    background: #ddffee;
+      height: 100px;
+      border: 2px dotted #888;
+  }
+}

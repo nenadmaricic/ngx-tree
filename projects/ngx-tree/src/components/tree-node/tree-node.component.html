@@ -1,4 +1,7 @@
 <ng-template [ngIf]="!templates.treeNodeFullTemplate">
+
+  <ngx-tree-node-drop-slot *ngIf="index === 0" [dropIndex]="node.index" [node]="node.parent" [options]="options"></ngx-tree-node-drop-slot>
+
   <ngx-tree-node-wrapper [style.padding-left]="options.levelPadding!(node)"
                          [node]="node"
                          [options]="options"
@@ -23,6 +26,9 @@
                           [options]="options"
                           [children]="node.visibleChildren"
                           [templates]="templates"></ngx-tree-node-children>
+
+
+  <ngx-tree-node-drop-slot [dropIndex]="node.index + 1" [node]="node.parent" [options]="options"></ngx-tree-node-drop-slot>
 </ng-template>
 
 <ng-container
