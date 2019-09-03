@@ -1,5 +1,5 @@
-import { Component } from '@angular/core'
-import { TreeNode } from '@e-cloud/ngx-tree'
+import { Component, ViewChild } from '@angular/core'
+import { TreeNode, TreeComponent } from '@e-cloud/ngx-tree'
 
 @Component({
     selector: 'demo-simple',
@@ -36,16 +36,54 @@ export class SimpleComponent {
         },
         allowDrop: (node, to) => {
             // console.log('allowDrop?');
-            if (node.id === to.parent.id || node.parent === to.parent) {
-                return false
-            }
+            // if (node.id === to.parent.id || node.parent === to.parent) {
+            //     return false
+            // }
 
             return true
         },
     }
 
+    @ViewChild(TreeComponent, { static: false }) private tree: TreeComponent
+
     constructor() {
-        this.generateData(4)
+        // this.generateData(4)
+        this.nodes = [
+            {
+                expanded: true,
+                name: `root expanded 1`,
+                subTitle: 'the root',
+                children: [
+                    {
+                        name: 'child1',
+                        subTitle: 'a good child',
+                        hasChildren: false,
+                    },
+                    {
+                        name: 'child2',
+                        subTitle: 'a bad child',
+                        hasChildren: false,
+                    },
+                ],
+            },
+            {
+                expanded: true,
+                name: `root expanded 2`,
+                subTitle: 'the root',
+                children: [
+                    {
+                        name: 'child1',
+                        subTitle: 'a good child',
+                        hasChildren: false,
+                    },
+                    {
+                        name: 'child2',
+                        subTitle: 'a bad child',
+                        hasChildren: false,
+                    },
+                ],
+            },
+        ]
     }
 
     regenerateData() {
@@ -204,4 +242,38 @@ export class SimpleComponent {
         console.log($event)
     }
 
+    expandAll() {
+        this.tree.treeModel.expandAll()
+    }
+
+    collapseAll() {
+        this.tree.treeModel.collapseAll()
+    }
+
+    add() {
+        let parent = this.tree.treeModel.getActiveNode()
+        if (!parent) {
+            parent = this.tree.treeModel.virtualRoot
+        }
+        if (parent) {
+            const elem: any = {
+                name: (new Date()).toString()
+            }
+            parent.data.children = parent.data.children || []
+            parent.data.children.splice(0, 0, elem)
+            parent.addChild(elem, 0, false)
+        }
+    }
+
+    remove() {
+        const toRemove = this.tree.treeModel.getActiveNode()
+        if (toRemove) {
+            const elem: any = toRemove.data
+            const parentData = toRemove.parent.data
+            const index = parentData.children.indexOf(elem)
+            parentData.children.splice(index, 1)
+
+            toRemove.remove(false)
+        }
+    }
 }

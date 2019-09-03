@@ -122,6 +122,8 @@ export class TreeNode {
          * index of the node inside its parent's children
          */
         public index: number,
+
+        changeData = true
     ) {
         // Make sure there's a unique id without overriding existing ids to work with immutable data structures
         if (this.id === undefined || this.id === null) {
@@ -134,7 +136,7 @@ export class TreeNode {
         }
 
         if (this.getField('children')) {
-            this.initChildren()
+            this.initChildren(changeData)
         }
     }
 
@@ -422,20 +424,24 @@ export class TreeNode {
         return this
     }
 
-    addChild(data: any, index: number) {
+    addChild(data: any, index: number, changeData = true) {
         const node = new TreeNode(data, this, this.treeModel, index)
 
         // If node doesn't have children - create children array
-        if (!this.getField('children')) {
+        if (changeData && !this.getField('children')) {
             this.setField('children', [])
         }
 
         if (this.children) {
-            this.getField('children').splice(index, 0, data)
+            if (changeData) {
+                this.getField('children').splice(index, 0, data)
+            }
             this.children.splice(index, 0, node)
             this.children = this.children.slice()
         } else {
-            this.getField('children').push(data)
+            if (changeData) {
+                this.getField('children').push(data)
+            }
             this.children = [node]
         }
 
@@ -444,16 +450,18 @@ export class TreeNode {
         this.fireEvent({ eventName: TREE_EVENTS.addNode, node })
     }
 
-    appendChild(data: any) {
-        this.addChild(data, this.children ? this.children.length : 0)
+    appendChild(data: any, changeData = true) {
+        this.addChild(data, this.children ? this.children.length : 0, changeData)
     }
 
-    remove() {
-        this.parent!.removeChild(this)
+    remove(changeData = true) {
+        this.parent!.removeChild(this, changeData)
     }
 
-    removeChild(node: TreeNode) {
-        pullAt(this.getField('children'), node.index)
+    removeChild(node: TreeNode, changeData = true) {
+        if (changeData) {
+            pullAt(this.getField('children'), node.index)
+        }
         this.children = without(this.children, node)
 
         this.reCalcChildrenIndices(0)
@@ -490,9 +498,9 @@ export class TreeNode {
         })
     }
 
-    private initChildren() {
+    private initChildren(changeData = true) {
         this.children = this.getField('children')
-            .map((data: any, index: number) => new TreeNode(data, this, this.treeModel, index))
+            .map((data: any, index: number) => new TreeNode(data, this, this.treeModel, index, changeData))
     }
 
     private getLastOpenDescendant(skipHidden = false): TreeNode {

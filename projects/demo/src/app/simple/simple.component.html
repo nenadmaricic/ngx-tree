@@ -2,32 +2,46 @@
 <button (click)="tree.treeModel.clearFilter()">Clear Filter</button>
 
 <button (click)="this.regenerateData()">regenerate data</button>
+<button (click)="expandAll()">Expand All</button>
+<button (click)="collapseAll()">Collapse All</button>
+<button (click)="add()">Add child</button>
+<button (click)="remove()">Remove child</button>
 
-<ngx-tree
-  #tree
-  [enableAnimation]="false"
-  [nodes]="nodes"
-  [dataOptions]="customOptions"
-  [useVirtualScroll]="customOptions.useVirtualScroll"
-  [referenceItemHeight]="customOptions.referenceItemHeight"
-  [allowDrag]="customOptions.allowDrag"
-  [allowDrop]="customOptions.allowDrop"
-  (expand)="log($event)"
-  (collapse)="log($event)"
-  (changeFilter)="log($event)"
-  (toggleExpander)="log($event)"
-  (moveNode)="log($event)"
-  (addNode)="log($event)"
-  (removeNode)="log($event)"
-  (activate)="log($event)"
-  (deactivate)="log($event)"
-  (focus)="log($event)"
-  (blur)="log($event)"
-  (initialized)="log($event)"
-  (loadChildren)="log($event)">
-  <ng-template #treeNodeTemplate let-node="node">
-    <span title="{{node.data.subTitle}}">{{ node.data.name }}</span>
-    <span class="pull-right">{{ childrenCount(node) }}</span>
-  </ng-template>
-  <ng-template #loadingTemplate>Loading, please hold....</ng-template>
-</ngx-tree>
+<div>
+  <div style="display: inline-block">
+    <ngx-tree
+    #tree
+    [enableAnimation]="false"
+    [nodes]="nodes"
+    [dataOptions]="customOptions"
+    [useVirtualScroll]="customOptions.useVirtualScroll"
+    [referenceItemHeight]="customOptions.referenceItemHeight"
+    [allowDrag]="customOptions.allowDrag"
+    [allowDrop]="customOptions.allowDrop"
+    (expand)="log($event)"
+    (collapse)="log($event)"
+    (changeFilter)="log($event)"
+    (toggleExpander)="log($event)"
+    (moveNode)="log($event)"
+    (addNode)="log($event)"
+    (removeNode)="log($event)"
+    (activate)="log($event)"
+    (deactivate)="log($event)"
+    (focus)="log($event)"
+    (blur)="log($event)"
+    (initialized)="log($event)"
+    (loadChildren)="log($event)">
+    <ng-template #treeNodeTemplate let-node="node">
+      <span title="{{node.data.subTitle}}">{{ node.data.name }}</span>
+      <span class="pull-right">{{ childrenCount(node) }}</span>
+    </ng-template>
+    <ng-template #loadingTemplate>Loading, please hold....</ng-template>
+  </ngx-tree>
+  </div>
+  <div style="display: inline-block;overflow: scroll; width: 500px; height:500px;margin-left: 20px">
+    <pre>
+      {{nodes | json}}
+      </pre>
+  </div>
+</div>
+

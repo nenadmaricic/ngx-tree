@@ -443,7 +443,7 @@ export class TreeModel {
      * The combination of node + index tells which node needs to be moved, and to where
      * @param to
      */
-    moveNode(node: TreeNode, to: { parent: TreeNode, index: number, dropOnNode: boolean }) {
+    moveNode(node: TreeNode, to: { parent: TreeNode, index: number, dropOnNode: boolean }, changeData = true) {
         const fromIndex = node.index
         const fromParent = node.parent
 
@@ -451,15 +451,15 @@ export class TreeModel {
             return
         }
 
-        node.remove()
+        node.remove(changeData)
 
         // Compensate for index if already removed from parent:
         const toIndex = (fromParent === to.parent && to.index > fromIndex) ? to.index - 1 : to.index
 
         if (to.dropOnNode) {
-            to.parent.appendChild(node.data)
+            to.parent.appendChild(node.data, changeData)
         } else {
-            to.parent.addChild(node.data, toIndex)
+            to.parent.addChild(node.data, toIndex, changeData)
         }
 
         this.fireEvent({
