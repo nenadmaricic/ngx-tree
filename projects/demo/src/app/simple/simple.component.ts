@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core'
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core'
 import { TreeNode, TreeComponent } from '@e-cloud/ngx-tree'
 
 @Component({
@@ -46,7 +46,7 @@ export class SimpleComponent {
 
     @ViewChild(TreeComponent, { static: false }) private tree: TreeComponent
 
-    constructor() {
+    constructor(public cdr: ChangeDetectorRef) {
         // this.generateData(4)
         this.nodes = [
             {
@@ -274,6 +274,26 @@ export class SimpleComponent {
             parentData.children.splice(index, 1)
 
             toRemove.remove(false)
+        }
+    }
+
+    expand() {
+        const node = this.tree.treeModel.getActiveNode()
+        if (node) {
+            node.expand().then((r) => {
+                console.log('expanded')
+                this.cdr.markForCheck()
+            }, (err) => {
+                console.log(err)
+            })
+        }
+    }
+
+    collapse() {
+        const node = this.tree.treeModel.getActiveNode()
+        if (node) {
+            node.collapse()
+            this.cdr.markForCheck()
         }
     }
 }

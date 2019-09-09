@@ -27,11 +27,16 @@ export class TreeNodeExpanderComponent implements OnInit, OnDestroy {
             this.structureChangeSub = merge<TreeEvent>(
                 this.node.treeModel.events.addNode,
                 this.node.treeModel.events.removeNode,
+                this.node.treeModel.events.changeFilter,
+                this.node.treeModel.events.expand,
+                this.node.treeModel.events.collapse,
             )
                 .subscribe((event: TreeEvent) => {
-                    if (event.node && event.node.parent === this.node) {
-                        this.cdRef.markForCheck()
-                    }
+                    // if (event.node && event.node.parent === this.node) {
+                    //     this.cdRef.markForCheck()
+                    // }
+
+                    this.cdRef.markForCheck()
                 })
         }
     }
